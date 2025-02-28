@@ -1,7 +1,5 @@
 package ge.POS.design_pattern.core.services;
 
-import ge.POS.design_pattern.core.DTOs.CreateProductDTO;
-import ge.POS.design_pattern.core.DTOs.UpdateProductPriceDTO;
 import ge.POS.design_pattern.core.exceptions.ProductExistsWithBarcodeException;
 import ge.POS.design_pattern.core.exceptions.ProductNotFoundException;
 import ge.POS.design_pattern.core.models.Unit;
@@ -42,7 +40,7 @@ public class ProductService {
 
     public Product updateProduct(String id, double price) throws ProductNotFoundException {
         Optional<Product> product = productRepository.findById(id);
-        if (!product.isPresent()) {
+        if (product.isEmpty()) {
             throw new ProductNotFoundException(id);
         }
         product.get().setPrice(price);

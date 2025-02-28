@@ -1,14 +1,11 @@
 package ge.POS.design_pattern.core;
 
-import ge.POS.design_pattern.core.DTOs.CreateProductDTO;
-import ge.POS.design_pattern.core.DTOs.CreateUnitDTO;
-import ge.POS.design_pattern.core.DTOs.UpdateProductPriceDTO;
-import ge.POS.design_pattern.core.exceptions.ProductExistsWithBarcodeException;
-import ge.POS.design_pattern.core.exceptions.ProductNotFoundException;
-import ge.POS.design_pattern.core.exceptions.UnitExistsWithNameException;
-import ge.POS.design_pattern.core.exceptions.UnitNotFoundException;
+import ge.POS.design_pattern.core.DTOs.*;
+import ge.POS.design_pattern.core.exceptions.*;
 import ge.POS.design_pattern.core.models.Product;
+import ge.POS.design_pattern.core.models.Receipt;
 import ge.POS.design_pattern.core.models.Unit;
+import ge.POS.design_pattern.core.models.Sales;
 import ge.POS.design_pattern.core.services.ProductService;
 import ge.POS.design_pattern.core.services.ReceiptService;
 import ge.POS.design_pattern.core.services.UnitService;
@@ -57,5 +54,32 @@ public class CoreFacade {
 
     public Product updateProduct(String id, UpdateProductPriceDTO productDTO) throws ProductNotFoundException {
         return productService.updateProduct(id, productDTO.getPrice());
+    }
+
+    public Receipt createReceipt() {
+        return receiptService.createReceipt();
+    }
+
+    public Receipt getReceipt(String id) throws ReceiptNotFoundException {
+        return receiptService.getReceipt(id);
+    }
+
+    public void deleteReceipt(String id) throws ReceiptNotFoundException {
+        receiptService.deleteReceipt(id);
+    }
+
+    public void updateReceiptStatus(String id, ReceiptStatusDTO receiptDTO) throws ReceiptNotFoundException {
+        receiptService.updateReceiptStatus(id, receiptDTO.isStatus());
+    }
+
+    public Receipt addProductToReceipt(String id, ProductForReceiptDTO receiptDTO) throws ProductNotFoundException, ReceiptNotFoundException {
+        Product product = productService.getProduct(receiptDTO.getProductID());
+        return receiptService.addProductToReceipt(id, receiptDTO.getQuantity(), product);
+    }
+
+    public Sales getSales() {
+        List<Receipt> receipts = receiptService.getAllReceipts();
+        Sales sales = new Sales();
+        return sales.count_revenue(receipts);
     }
 }

@@ -15,7 +15,7 @@ public class Receipt {
     private UUID id;
 
     @Column(name = "status", nullable = false)
-    private boolean status = false;
+    private boolean status = true;
 
     @OneToMany(mappedBy = "receipt", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ProductInReceipt> products = new ArrayList<>();
@@ -26,6 +26,10 @@ public class Receipt {
 
     public void setProducts(List<ProductInReceipt> products) {
         this.products = products;
+    }
+
+    public void addProduct(ProductInReceipt product) {
+        products.add(product);
     }
 
     @Transient

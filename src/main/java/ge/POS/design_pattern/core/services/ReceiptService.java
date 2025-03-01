@@ -1,5 +1,6 @@
 package ge.POS.design_pattern.core.services;
 
+import ge.POS.design_pattern.core.exceptions.ReceiptClosedException;
 import ge.POS.design_pattern.core.exceptions.ReceiptNotFoundException;
 import ge.POS.design_pattern.core.models.Product;
 import ge.POS.design_pattern.core.models.ProductInReceipt;
@@ -30,9 +31,10 @@ public class ReceiptService {
         return receiptRepository.findById(id).orElseThrow(() -> new ReceiptNotFoundException(id));
     }
 
-    public void deleteReceipt(String id) throws ReceiptNotFoundException {
-        if (!receiptRepository.existsById(id)) {
-            throw new ReceiptNotFoundException(id);
+    public void deleteReceipt(String id) throws ReceiptNotFoundException, ReceiptClosedException {
+        Receipt receipt = receiptRepository.findById(id).orElseThrow(() -> new ReceiptNotFoundException(id));
+        if (!receipt.getStatus()) {
+            throw new ReceiptClosedException(id);
         }
         receiptRepository.deleteById(id);
     }
@@ -43,8 +45,11 @@ public class ReceiptService {
         receiptRepository.save(receipt);
     }
 
-    public Receipt addProductToReceipt(String id, int quantity, Product product) throws ReceiptNotFoundException {
+    public Receipt addProductToReceipt(String id, int quantity, Product product) throws ReceiptNotFoundException, ReceiptClosedException {
         Receipt receipt = receiptRepository.findById(id).orElseThrow(() -> new ReceiptNotFoundException(id));
+        if (!receipt.getStatus()) {
+            throw new ReceiptClosedException(id);
+        }
         ProductInReceipt productInReceipt = new ProductInReceipt();
         productInReceipt.setId(product.getId());
         productInReceipt.setPrice(product.getPrice());

@@ -4,10 +4,10 @@ import ge.POS.design_pattern.core.CoreFacade;
 import ge.POS.design_pattern.core.DTOs.ProductForReceiptDTO;
 import ge.POS.design_pattern.core.DTOs.ReceiptStatusDTO;
 import ge.POS.design_pattern.core.exceptions.ProductNotFoundException;
+import ge.POS.design_pattern.core.exceptions.ReceiptClosedException;
 import ge.POS.design_pattern.core.exceptions.ReceiptNotFoundException;
 import ge.POS.design_pattern.core.models.Receipt;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -53,6 +53,8 @@ public class ReceiptController {
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (ReceiptNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (ReceiptClosedException e) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
 
@@ -64,6 +66,8 @@ public class ReceiptController {
             return new ResponseEntity<>(receipt, HttpStatus.CREATED);
         } catch (ReceiptNotFoundException | ProductNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (ReceiptClosedException e) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
 }

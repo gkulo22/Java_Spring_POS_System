@@ -64,7 +64,7 @@ public class CoreFacade {
         return receiptService.getReceipt(id);
     }
 
-    public void deleteReceipt(String id) throws ReceiptNotFoundException {
+    public void deleteReceipt(String id) throws ReceiptNotFoundException, ReceiptClosedException {
         receiptService.deleteReceipt(id);
     }
 
@@ -72,7 +72,7 @@ public class CoreFacade {
         receiptService.updateReceiptStatus(id, receiptDTO.isStatus());
     }
 
-    public Receipt addProductToReceipt(String id, ProductForReceiptDTO receiptDTO) throws ProductNotFoundException, ReceiptNotFoundException {
+    public Receipt addProductToReceipt(String id, ProductForReceiptDTO receiptDTO) throws ProductNotFoundException, ReceiptNotFoundException, ReceiptClosedException {
         Product product = productService.getProduct(receiptDTO.getProductID());
         return receiptService.addProductToReceipt(id, receiptDTO.getQuantity(), product);
     }
